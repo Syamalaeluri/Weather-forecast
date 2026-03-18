@@ -11,6 +11,8 @@ https://weather-forecast-4t8y.onrender.com/
 🎥 Demo Video (Google Drive):
 https://drive.google.com/file/d/1vHoUAS68TGnokysQzZLwaH7QrX-IPOw_/view?usp=sharing
 
+
+
 ✨ Features:
 
 🌍 Search weather by city name or ZIP code
@@ -27,6 +29,8 @@ https://drive.google.com/file/d/1vHoUAS68TGnokysQzZLwaH7QrX-IPOw_/view?usp=shari
 
 🔐 Secure API key handling using .env
 
+
+
 🛠️ Tech Stack:
 
 Frontend: HTML, CSS
@@ -36,6 +40,8 @@ Backend: Python (Flask)
 API: OpenWeatherMap API
 
 Deployment: Render
+
+
 
 ⚙️ Setup Instructions (Run Locally):
 1️⃣ Clone the repository
@@ -56,6 +62,7 @@ Create a .env file and add:
 OPENWEATHERMAP_API_KEY=your_api_key_here
 
 👉 Get API key from: https://openweathermap.org/api
+
 
 5️⃣ Run the app
 python app.py
