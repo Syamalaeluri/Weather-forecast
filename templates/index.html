@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast Application</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- LAYER 1: Landing Page -->
+    <div id="layer1-landing" class="landing-layer {% if weather or error %}hidden{% endif %}">
+        <!-- Animated Background Blobs -->
+        <div class="landing-bg-blob blob-1"></div>
+        <div class="landing-bg-blob blob-2"></div>
+        <div class="landing-bg-blob blob-3"></div>
+
+        <div class="landing-content-split">
+            <!-- Left Side -->
+            <div class="landing-left">
+                <h1 class="landing-title">Weather Forecast</h1>
+                <p class="landing-subtitle">The Only Forecast You Need</p>
+                <p class="landing-desc">Experience accurate, real-time weather updates wrapped in an intuitive and beautiful interface. Always know what's coming.</p>
+                <button id="btn-get-started" class="btn-primary">Get Started</button>
+            </div>
+            
+            <!-- Right Side -->
+            <div class="landing-right">
+                <div class="landing-illustration">
+                    <div class="ill-sun"></div>
+                    <div class="ill-cloud"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LAYER 2: Main Dashboard -->
+    <div id="layer2-dashboard" class="dashboard-wrapper {% if not weather and not error %}hidden{% endif %}">
+        <div class="dashboard-container">
+
+        <!-- Left Panel: Scenic View & Search -->
+        <div class="left-panel">
+            <div class="left-panel-content">
+                <header class="dashboard-header">
+                    <h1>forecast</h1>
+                    {% if weather %}
+                    <div class="location-badge">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ weather.city }}{% if weather.country %}, {{ weather.country }}{% endif %}</span>
+                    </div>
+                    {% endif %}
+                </header>
+
+                <div class="hero-text">
+                    <h2>The Only Weather Forecast You Need</h2>
+                    <form method="POST" action="/" class="search-form">
+                        <input type="text" name="query" placeholder="Enter location" required autofocus>
+                        <button type="submit" class="btn-search">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <div class="unit-toggle">
+                            <select name="unit" class="unit-select">
+                                <option value="metric">°C</option>
+                                <option value="imperial" {% if request.form.get('unit')=='imperial' %}selected{% endif
+                                    %}>°F</option>
+                            </select>
+                        </div>
+                    </form>
+
+                    {% if error %}
+                    <div class="error-msg">
+                        <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Optional overlay for better text readability -->
+            <div class="panel-overlay"></div>
+        </div>
+
+        <!-- Right Panel: Weather Data -->
+        <div class="right-panel">
+            <div class="right-panel-content">
+
+                {% if weather %}
+                <!-- Location Title -->
+                <div class="panel-location-title">
+                    {{ weather.city }}{% if weather.country %}, {{ weather.country }}{% endif %}
+                </div>
+
+                <!-- Today Section -->
+                <div class="section-title">
+                    <h3>Today</h3>
+                    <span class="datetime">{{ weather.datetime }}</span>
+                </div>
+
+                <div class="today-card fade-in">
+                    <div class="today-main">
+                        <div class="temp-display">
+                            <span class="temp-value">{{ weather.temperature }}°</span>
+                            <div class="condition-display">
+                                <span class="condition-text">{{ weather.condition }}</span>
+                                {% set wc = weather.condition %}
+                                <div class="anim-icon-container">
+                                    {% if 'Clear' in wc %}
+                                    <div class="anim-icon clear-sky">
+                                        <div class="sun"></div>
+                                    </div>
+                                    {% elif 'Cloud' in wc %}
+                                    <div class="anim-icon clouds-enhanced">
+                                        <div class="m-cloud m-cloud-back" style="--s: 0.65;"></div>
+                                        <div class="m-cloud m-cloud-mid" style="--s: 0.85;"></div>
+                                        <div class="m-cloud m-cloud-front" style="--s: 1;"></div>
+                                    </div>
+                                    {% elif 'Rain' in wc %}
+                                    <div class="anim-icon rain">
+                                        <div class="cloud"></div>
+                                        <div class="rain-drops">
+                                            <div class="drop d1"></div>
+                                            <div class="drop d2"></div>
+                                            <div class="drop d3"></div>
+                                        </div>
+                                    </div>
+                                    {% elif 'Drizzle' in wc %}
+                                    <div class="anim-icon drizzle">
+                                        <div class="cloud"></div>
+                                        <div class="rain-drops">
+                                            <div class="drop d1"></div>
+                                            <div class="drop d2"></div>
+                                        </div>
+                                    </div>
+                                    {% elif 'Thunderstorm' in wc %}
+                                    <div class="anim-icon thunderstorm">
+                                        <div class="cloud"></div>
+                                        <div class="lightning"></div>
+                                    </div>
+                                    {% elif 'Snow' in wc %}
+                                    <div class="anim-icon snow">
+                                        <div class="cloud"></div>
+                                        <div class="snowflakes">
+                                            <div class="flake f1"></div>
+                                            <div class="flake f2"></div>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="anim-icon clouds-enhanced">
+                                        <div class="m-cloud m-cloud-back" style="--s: 0.65;"></div>
+                                        <div class="m-cloud m-cloud-mid" style="--s: 0.85;"></div>
+                                        <div class="m-cloud m-cloud-front" style="--s: 1;"></div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="today-details">
+                        <div class="detail-row">
+                            <div class="dt-header">
+                                <svg class="svg-anim-humidity" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M12 21C16.9706 21 21 16.9706 21 12C21 9.94723 19.9678 8.01955 18.2574 6.30911L12.7071 0.758823C12.3166 0.368299 11.6834 0.368299 11.2929 0.758823L5.74264 6.30911C4.03215 8.01955 3 9.94723 3 12C3 16.9706 7.02944 21 12 21Z"
+                                        fill="currentColor" />
+                                </svg>
+                                <span class="dt-label">Humidity</span>
+                            </div>
+                            <span class="dt-value">{{ weather.humidity }}%</span>
+                        </div>
+                        <div class="detail-row">
+                            <div class="dt-header">
+                                <svg class="svg-anim-wind" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="windGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" stop-color="#94a3b8" stop-opacity="0" />
+                                            <stop offset="30%" stop-color="#64748b" />
+                                            <stop offset="70%" stop-color="#334155" />
+                                            <stop offset="100%" stop-color="#cbd5e1" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                    <path class="w-path-1"
+                                        d="M2.5 12.5H16.5C18.1569 12.5 19.5 11.1569 19.5 9.5C19.5 7.84315 18.1569 6.5 16.5 6.5C15.2638 6.5 14.2014 7.24759 13.7388 8.35639"
+                                        stroke="url(#windGrad)" stroke-width="2.5" stroke-linecap="round" />
+                                    <path class="w-path-2"
+                                        d="M5 6.5H10.5C11.8807 6.5 13 5.38071 13 4C13 2.61929 11.8807 1.5 10.5 1.5C9.43444 1.5 8.524 2.16616 8.16335 3.12579"
+                                        stroke="url(#windGrad)" stroke-width="2.5" stroke-linecap="round" />
+                                    <path class="w-path-3"
+                                        d="M1.5 18.5H13.5C15.1569 18.5 16.5 19.8431 16.5 21.5C16.5 23.1569 15.1569 24.5 13.5 24.5C12.3166 24.5 11.2945 23.8118 10.8122 22.7847"
+                                        stroke="url(#windGrad)" stroke-width="2.5" stroke-linecap="round" />
+                                </svg>
+                                <span class="dt-label">Wind</span>
+                            </div>
+                            <span class="dt-value">{{ weather.wind_speed }} {{ weather.wind_unit }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {% if forecast %}
+                <!-- Daily Forecast Section -->
+                <div class="section-title">
+                    <h3>Daily</h3>
+                </div>
+
+                <div class="forecast-cards fade-in">
+                    {% for day in forecast %}
+                    <div class="forecast-card">
+                        <div class="forecast-top">
+                            <span class="forecast-temp">{{ day.temp }}°</span>
+                        </div>
+                        <div class="forecast-mid">
+                            {% set fw = day.condition %}
+                            <div class="anim-icon-container-small">
+                                {% if 'Clear' in fw %}
+                                <div class="anim-icon clear-sky">
+                                    <div class="sun"></div>
+                                </div>
+                                {% elif 'Cloud' in fw %}
+                                <div class="anim-icon clouds-enhanced">
+                                    <div class="m-cloud m-cloud-back" style="--s: 0.65;"></div>
+                                    <div class="m-cloud m-cloud-mid" style="--s: 0.85;"></div>
+                                    <div class="m-cloud m-cloud-front" style="--s: 1;"></div>
+                                </div>
+                                {% elif 'Rain' in fw %}
+                                <div class="anim-icon rain">
+                                    <div class="cloud"></div>
+                                    <div class="rain-drops">
+                                        <div class="drop d1"></div>
+                                        <div class="drop d2"></div>
+                                        <div class="drop d3"></div>
+                                    </div>
+                                </div>
+                                {% elif 'Drizzle' in fw %}
+                                <div class="anim-icon drizzle">
+                                    <div class="cloud"></div>
+                                    <div class="rain-drops">
+                                        <div class="drop d1"></div>
+                                        <div class="drop d2"></div>
+                                    </div>
+                                </div>
+                                {% elif 'Thunderstorm' in fw %}
+                                <div class="anim-icon thunderstorm">
+                                    <div class="cloud"></div>
+                                    <div class="lightning"></div>
+                                </div>
+                                {% elif 'Snow' in fw %}
+                                <div class="anim-icon snow">
+                                    <div class="cloud"></div>
+                                    <div class="snowflakes">
+                                        <div class="flake f1"></div>
+                                        <div class="flake f2"></div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="anim-icon clouds-enhanced">
+                                    <div class="m-cloud m-cloud-back" style="--s: 0.65;"></div>
+                                    <div class="m-cloud m-cloud-mid" style="--s: 0.85;"></div>
+                                    <div class="m-cloud m-cloud-front" style="--s: 1;"></div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <span class="forecast-condition">{{ day.condition }}</span>
+                        </div>
+                        <div class="forecast-bot">
+                            <span class="forecast-day">{{ day.day }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-cloud-sun fa-4x mb-3 text-muted"></i>
+                    <p>Enter a city name or zip code to view the dashboard.</p>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+        </div>
+    </div>
+
+    <!-- LAYER 3: Detail Modal -->
+    <div id="layer3-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="btn-close-modal" class="btn-close"><i class="fas fa-times"></i></button>
+            <div class="modal-body" id="modal-body-content">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const layer1 = document.getElementById('layer1-landing');
+            const layer2 = document.getElementById('layer2-dashboard');
+            const layer3 = document.getElementById('layer3-modal');
+            const btnGetStarted = document.getElementById('btn-get-started');
+            const btnCloseModal = document.getElementById('btn-close-modal');
+            const forecastCards = document.querySelectorAll('.forecast-card');
+            const modalBody = document.getElementById('modal-body-content');
+
+            if (btnGetStarted) {
+                btnGetStarted.addEventListener('click', () => {
+                    layer1.classList.add('fade-out');
+                    setTimeout(() => {
+                        layer1.classList.add('hidden');
+                        layer1.classList.remove('fade-out');
+                        layer2.classList.remove('hidden');
+                        layer2.classList.add('fade-in');
+                    }, 500);
+                });
+            }
+
+            forecastCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const temp = card.querySelector('.forecast-temp').innerText;
+                    const condition = card.querySelector('.forecast-condition').innerText;
+                    const day = card.querySelector('.forecast-day').innerText;
+                    const iconHtml = card.querySelector('.anim-icon-container-small').innerHTML;
+                    
+                    const locationEl = document.querySelector('.panel-location-title');
+                    const location = locationEl ? locationEl.innerText : 'Unknown Location';
+
+                    modalBody.innerHTML = `
+                        <div class="modal-location">${location}</div>
+                        <div class="modal-date">${day}</div>
+                        <div class="modal-icon-large">${iconHtml}</div>
+                        <div class="modal-temp">${temp}</div>
+                        <div class="modal-condition">${condition}</div>
+                        <div class="modal-extras">
+                            <div class="modal-extra-item">
+                                <i class="fas fa-tint"></i>
+                                <span>Humidity</span>
+                                <strong>65%</strong>
+                            </div>
+                            <div class="modal-extra-item">
+                                <svg class="svg-anim-wind" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 28px; height: 28px; margin-bottom: 5px;">
+                                    <defs>
+                                        <linearGradient id="windGradModal" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" stop-color="#3b82f6" stop-opacity="0" />
+                                            <stop offset="30%" stop-color="#3b82f6" />
+                                            <stop offset="70%" stop-color="#2563eb" />
+                                            <stop offset="100%" stop-color="#93c5fd" stop-opacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                    <path class="w-path-1" d="M2.5 12.5H16.5C18.1569 12.5 19.5 11.1569 19.5 9.5C19.5 7.84315 18.1569 6.5 16.5 6.5C15.2638 6.5 14.2014 7.24759 13.7388 8.35639" stroke="url(#windGradModal)" stroke-width="2.5" stroke-linecap="round" />
+                                    <path class="w-path-2" d="M5 6.5H10.5C11.8807 6.5 13 5.38071 13 4C13 2.61929 11.8807 1.5 10.5 1.5C9.43444 1.5 8.524 2.16616 8.16335 3.12579" stroke="url(#windGradModal)" stroke-width="2.5" stroke-linecap="round" />
+                                    <path class="w-path-3" d="M1.5 18.5H13.5C15.1569 18.5 16.5 19.8431 16.5 21.5C16.5 23.1569 15.1569 24.5 13.5 24.5C12.3166 24.5 11.2945 23.8118 10.8122 22.7847" stroke="url(#windGradModal)" stroke-width="2.5" stroke-linecap="round" />
+                                </svg>
+                                <span>Wind</span>
+                                <strong>12 km/h</strong>
+                            </div>
+                        </div>
+                    `;
+                    
+                    layer3.classList.remove('hidden');
+                    setTimeout(() => {
+                        layer3.classList.add('show');
+                    }, 10);
+                });
+            });
+
+            if (btnCloseModal) {
+                btnCloseModal.addEventListener('click', closeLayer3);
+            }
+            
+            if (layer3) {
+                layer3.addEventListener('click', (e) => {
+                    if (e.target === layer3) {
+                        closeLayer3();
+                    }
+                });
+            }
+
+            function closeLayer3() {
+                layer3.classList.remove('show');
+                setTimeout(() => {
+                    layer3.classList.add('hidden');
+                }, 400);
+            }
+        });
+    </script>
+</body>
+
+</html>
