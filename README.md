@@ -12,6 +12,7 @@ https://drive.google.com/file/d/1vHoUAS68TGnokysQzZLwaH7QrX-IPOw_/view?usp=shari
 
 
 
+
 ✨ Features:
 
 🔍 Search weather by City Name or ZIP Code
@@ -30,6 +31,7 @@ https://drive.google.com/file/d/1vHoUAS68TGnokysQzZLwaH7QrX-IPOw_/view?usp=shari
 
 
 
+
 🛠️ Tech Stack:
 
 Frontend: HTML, CSS
@@ -39,6 +41,7 @@ Backend: Python (Flask)
 API: OpenWeatherMap API
 
 Deployment: Render
+
 
 
 🚀 How to Run (Local Setup)
@@ -70,6 +73,7 @@ Open in browser:
 http://127.0.0.1:5000
 
 
+
 🌍 Deployment (Render)
 
 Push project to GitHub
@@ -84,6 +88,8 @@ Start Command:
 gunicorn app:app
 Add Environment Variable:
 OPENWEATHERMAP_API_KEY=your_api_key
+
+
 
 👨‍💻 Author
 
