@@ -16,11 +16,17 @@ https://drive.google.com/file/d/1vHoUAS68TGnokysQzZLwaH7QrX-IPOw_/view?usp=shari
 ✨ Features:
 
 🔍 Search weather by City Name or ZIP Code
+
 🌡️ Real-time Temperature, Humidity, Wind Speed
+
 📅 5-Day Forecast with interactive cards
+
 🎨 Modern UI with gradients and clean layout
+
 ☀️ Dynamic weather icons (Sun, Rain, Clouds, etc.)
+
 📱 Fully Responsive Design (Mobile + Desktop)
+
 🔐 Secure API key using .env
 
 
@@ -29,8 +35,11 @@ https://drive.google.com/file/d/1vHoUAS68TGnokysQzZLwaH7QrX-IPOw_/view?usp=shari
 🛠️ Tech Stack:
 
 Frontend: HTML, CSS
+
 Backend: Python (Flask)
+
 API: OpenWeatherMap API
+
 Deployment: Render
 
 
@@ -86,6 +95,7 @@ OPENWEATHERMAP_API_KEY=your_api_key
 👨‍💻 Author
 
 Syamala
+
 GitHub:https://github.com/Syamalaeluri
 
 
